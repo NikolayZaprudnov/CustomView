@@ -8,7 +8,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        findViewById<StatsView>(R.id.statsView). data = 88F
+        findViewById<StatsView>(R.id.statsView). data = 20F
 //        findViewById<StatsView>(R.id.statsView).data = listOf(
 //            500F,
 //            500F,

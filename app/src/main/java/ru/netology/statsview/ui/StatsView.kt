@@ -93,7 +93,9 @@ class StatsView @JvmOverloads constructor(
 //        }
 //        var all = data.sum()
         var startAngle = -90F
-        paint.color = 0xff00ffff.toInt()
+        paint.color =
+//            generateRandomColor()
+            0xff00ffff.toInt()
         greyPaint.color = 0xff808080.toInt()
         var sweepAngle = data * 3.6F
 
@@ -101,16 +103,16 @@ class StatsView @JvmOverloads constructor(
         canvas.drawArc(oval, startAngle, sweepAngle, false, paint)
 //        when(data){
 //            in 0F..25F -> {
-//                canvas.drawArc(oval, startAngle, 90F, false, paint)
 //                canvas.drawArc(oval, 0F, 270F, false, greyPaint)
+//                canvas.drawArc(oval, startAngle, 90F, false, paint)
 //            }
 //            in 25F..50F ->{
-//                canvas.drawArc(oval, startAngle, 180F, false, paint)
 //                canvas.drawArc(oval, 90F, 180F, false, greyPaint)
+//                canvas.drawArc(oval, startAngle, 180F, false, paint)
 //            }
 //            in 50F..75F ->{
-//                canvas.drawArc(oval, startAngle, 270F, false, paint)
 //                canvas.drawArc(oval, 180F, 90F, false, greyPaint)
+//                canvas.drawArc(oval, startAngle, 270F, false, paint)
 //            }
 //            in 75F..100F ->canvas.drawArc(oval, startAngle, 360F, false, paint)
 //        }
