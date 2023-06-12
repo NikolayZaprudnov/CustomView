@@ -37,17 +37,17 @@ class StatsView @JvmOverloads constructor(
         }
     }
 
-//    var data: List<Float> = emptyList()
+    //    var data: List<Float> = emptyList()
 //        set(value) {
 //            field = value
 //            invalidate()
 //
 //        }
-    var data:Float = 0F
-    set(value) {
-        field = value
-        invalidate()
-    }
+    var data: Float = 0F
+        set(value) {
+            field = value
+            invalidate()
+        }
     private var radius = 0F
     private var center = PointF()
     private var oval = RectF()
@@ -93,11 +93,12 @@ class StatsView @JvmOverloads constructor(
 //        }
 //        var all = data.sum()
         var startAngle = -90F
-        paint.color =  0xff00ffff.toInt()
+        paint.color = 0xff00ffff.toInt()
         greyPaint.color = 0xff808080.toInt()
-        var sweepAngle = data*3.6F
+        var sweepAngle = data * 3.6F
+
+        canvas.drawArc(oval, sweepAngle - 90F, 360F - sweepAngle, false, greyPaint)
         canvas.drawArc(oval, startAngle, sweepAngle, false, paint)
-        canvas.drawArc(oval, sweepAngle-90F, 360F-sweepAngle, false, greyPaint)
 //        when(data){
 //            in 0F..25F -> {
 //                canvas.drawArc(oval, startAngle, 90F, false, paint)
