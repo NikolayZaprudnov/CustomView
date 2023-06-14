@@ -1,5 +1,6 @@
 package ru.netology.statsview.ui
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,6 +8,8 @@ import android.graphics.PointF
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.LinearInterpolator
 import androidx.core.content.withStyledAttributes
 import ru.netology.statsview.R
 import ru.netology.statsview.utils.AndroidUtils
@@ -23,6 +26,9 @@ class StatsView @JvmOverloads constructor(
     private var textSize = AndroidUtils.dp(context, 20).toFloat()
     private var lineWidth = AndroidUtils.dp(context, 5)
     private var colors = emptyList<Int>()
+    private var progress = 0F
+    private var valueAnimation:ValueAnimator? = null
+
 
     init {
         context.withStyledAttributes(attributeSet, R.styleable.StatsView) {
@@ -37,20 +43,21 @@ class StatsView @JvmOverloads constructor(
         }
     }
 
-    //    var data: List<Float> = emptyList()
-//        set(value) {
-//            field = value
-//            invalidate()
-//
-//        }
-    var data: Float = 0F
+        var data: List<Float> = emptyList()
         set(value) {
             field = value
-            invalidate()
+            update()
         }
+//    var data: Float = 0F
+//        set(value) {
+//            field = value
+//            update()
+////            invalidate()
+//        }
     private var radius = 0F
     private var center = PointF()
     private var oval = RectF()
+    private var startAngle = -90F
 
     private val paint = Paint(
         Paint.ANTI_ALIAS_FLAG
@@ -91,16 +98,16 @@ class StatsView @JvmOverloads constructor(
 //        if (data.isEmpty()) {
 //            return
 //        }
-//        var all = data.sum()
-        var startAngle = -90F
+        var all = data.sum()
+
         paint.color =
 //            generateRandomColor()
             0xff00ffff.toInt()
         greyPaint.color = 0xff808080.toInt()
-        var sweepAngle = data * 3.6F
+//        var sweepAngle = data * 3.6F
 
-        canvas.drawArc(oval, sweepAngle - 90F, 360F - sweepAngle, false, greyPaint)
-        canvas.drawArc(oval, startAngle, sweepAngle, false, paint)
+//        canvas.drawArc(oval, startAngle, 360F , false, greyPaint)
+//        canvas.drawArc(oval, startAngle*progress, sweepAngle*progress, false, paint)
 //        when(data){
 //            in 0F..25F -> {
 //                canvas.drawArc(oval, 0F, 270F, false, greyPaint)
@@ -116,15 +123,17 @@ class StatsView @JvmOverloads constructor(
 //            }
 //            in 75F..100F ->canvas.drawArc(oval, startAngle, 360F, false, paint)
 //        }
-//        data.forEachIndexed {index, datum ->
-//            val dsg = datum / all
-//            val angle = dsg * 360F
-//            paint.color = colors.getOrNull(index) ?: generateRandomColor()
-//            canvas.drawArc(oval, startAngle, angle, false, paint)
-//            startAngle += angle
-//        }
+        data.forEachIndexed {index, datum ->
+            val dsg = datum / all
+            val angle = dsg * 360F
+            paint.color = colors.getOrNull(index) ?: generateRandomColor()
+            canvas.drawArc(oval, startAngle, angle*progress, false, paint)
+            startAngle += angle
+        }
         canvas.drawText(
-            "%.2f%%".format(data),
+            "%.2f%%".format(data
+                .sum() * 100
+            ),
             center.x,
             center.y + paintText.textSize / 4,
             paintText
@@ -132,5 +141,24 @@ class StatsView @JvmOverloads constructor(
     }
 
     private fun generateRandomColor() = Random.nextInt(0xff000000.toInt(), 0xFFFFFFFF.toInt())
+    private fun update(){
+        valueAnimation?.let {
+            it.removeAllListeners()
+            it.cancel()
+        }
+        progress = 0F
+        valueAnimation = ValueAnimator.ofFloat(0F,1F).apply {
+            addUpdateListener { anim ->
+                progress = anim.animatedValue as Float
+                invalidate()
+            }
+            startDelay = 500
+            duration = 700
+            interpolator = LinearInterpolator()
+
+        }.also {
+            it.start()
+        }
+    }
 
 }
